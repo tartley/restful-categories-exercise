@@ -1,0 +1,70 @@
+The Category Tree
+
+Rangespan categorises its product catalog, assigning every item to a category
+in a category tree. The category tree contains a number of top-level
+categories, below each of which is a tree of subcategories.
+
+For example, an incomplete category tree might look something like this:
+
+    Books
+        Fiction
+            Adventure
+            Drama
+            Murder Mystery
+        Non-Fiction
+            Biography
+            History
+    Electronics
+        Computers
+            Components
+                Audio cards
+                Input Devices
+                    Barcode Scanners
+                    Mice and Trackballs
+                    Scanners
+                Motherboards
+            Desktops
+            Laptops
+        Networking
+            Bridges
+            Routers
+
+
+Requirements
+
+You are to define a RESTful web service for curating the category tree. It
+should store the category tree in an appropriate, persistent data store and
+provide the following operations:
+
+    add_category(category, parent)
+
+Adds a new category as a direct child of the given parent category.
+
+Example: add_category(‘Science Fiction’, ‘Fiction’) will add Science Fiction as
+a new category alongside Adventure, Drama and Murder Mystery.
+
+If parent is omitted, adds a new top-level category.
+
+    get_subcategories(category)
+
+For the given category, returns a list of its immediate children in the tree.
+
+Example: get_subcategories(‘Books’) returns [‘Fiction’,’Non-Fiction’]
+
+    get_lineage(category)
+
+For a given category, retrieve a list showing its ancestry within the
+tree.Example: get_lineage(‘Laptops’) returns
+[‘Electronics’,’Computers’,’Laptops’]
+
+
+Technical details
+
+1.  Code should be in Python 2.7. You are welcome to use all available standard
+    libraries, and any open-source third-party libraries of your choice.
+
+2.  The code should implement a RESTful web service adhering to the
+    requirements above.
+
+3.  Return values should be appropriately structured JSON or XML.
+
