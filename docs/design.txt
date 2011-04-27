@@ -13,17 +13,18 @@ Thoughts
 --------
 
 The spec contains some ambiguity, or at least things that aren't yet obvious to
-me. With a real client I'd communicate a lot to resolve that, but in this case,
+me. With a real project I'd communicate a lot to resolve that, but in this case,
 I'll take it as read that's part of the exercise, and use my own best judgement
 instead. Specifically:
 
-The spec as written doesn't seem quite adequate, because specifying a category
-by its name seems potentially ambiguous. There could be more than one
-category with the same name, but with different parents. So I'm going to
-modify the spec to take UIDs instead of names.
+The spec as written doesn't sit comfortably with me, because specifying a
+category by its name seems potentially ambiguous. There could be more than one
+category with the same name, but with different parents. So I'm going to modify
+the spec to take UIDs instead of names.
 
 I'm really not sure about a lot of this - I've only written one web-app in the
-last year, and none before that since about 1998, but I'm reading up on it as I
+last year, and none before that since about 1998 (that one is Dirigible) so
+I'm not as well versed in this as I ought to be, but I'm reading up on it as I
 go and we'll see how it turns out.
 
 I'm familiar with Django, but suspect it's more heavyweight than I need for

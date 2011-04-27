@@ -14,7 +14,6 @@ urls = (
 )
 
 
-# handlers
 
 class Children(object):
 

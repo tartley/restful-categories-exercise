@@ -1,6 +1,10 @@
 
 Start TDD
 
+FT using command-line invokation of curl:
+    curl [-v -X] GET http://localhost:8080/
+    etc
+
 Create a demo of browsing from / to all of the specced functions. Use this
 demo to determine what content to put in the JSON representation of resources.
 
@@ -15,6 +19,12 @@ MySQL? Examples in web.py docs show use with PostGres.
 
 Consider whereabouts in the code should the conversion to/from JSON
 representations be being done?
+
+Return the right content-type:
+        web.header("Content-Type", 'application/json')
+
+Vary the content type depenant on the acceptable types in the request
+headers
 
 Consider what status codes should be being returned
     

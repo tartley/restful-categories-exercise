@@ -1,4 +1,6 @@
 
+import json
+
 from .storage import all_categories
 
 
@@ -16,11 +18,11 @@ from .storage import all_categories
 def get_subcategories(category_id):
     category = all_categories.get(category_id, None)
     if category:
-        return [
+        return json.dumps([
             child.name
             for child in all_categories.itervalues()
             if child.parent == category
-        ]
+        ])
     else:
         raise Exception('???')
 

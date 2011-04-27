@@ -5,12 +5,22 @@ import web
 from mock import patch
 
 from restful.server import Children
+from restful.storage import ModelCategory
 
+footwear = ModelCategory('footwear')
+shoes = ModelCategory('shoes', footwear)
+wellies = ModelCategory('wellies', footwear)
+
+test_categories = {
+    footwear.uid: footwear,
+    shoes.uid: shoes,
+    wellies.uid: wellies,
+}
 
 class TestChildren(TestCase):
 
-    @patch('restful.server.get_subcategories')
-    def test_GET_ok(self, mock_get_subcategories):
-        Children().GET('123')
-        self.assertEqual(mock_get_subcategories.call_args, ((123,), {}))
+    @patch('restful.api.all_categories', test_categories)
+    def test_GET_ok(self):
+        response = Children().GET(footwear.uid)
+        self.assertEqual(response, '["shoes", "wellies"]')
 
