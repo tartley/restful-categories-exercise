@@ -8,14 +8,14 @@ Dependencies
   * Tested on Windows XP
   * Python 2.7
 
-Requires Python packages:
+Product code requires the Python packages:
 
-  * web.py
+  * web.py 0.34
 
-For development & running tests, also requires Python packages:
+For development & running tests, also requires the Python packages:
 
-  * nose
-  * mock
+  * nose 1.0.0
+  * mock 0.7.0
 
 
 Usage
