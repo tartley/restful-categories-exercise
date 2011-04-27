@@ -6,8 +6,7 @@ Dependencies
 ------------
 
   * Tested on Windows XP
-  * Python 2.7
-  * Python packages:
+  * Python 2.7, with installed packages:
     * web.py
 
 
@@ -16,9 +15,9 @@ Usage
 
 Start the server with the script::
 
-    python restful-server.py <options>
+    python restful-server.py
 
-Check out the current state of the database with a browser pointed at:
+Open a browser and point at:
 
     http://localhost:8080
 
@@ -32,5 +31,11 @@ Very early in development - nothing works yet.
 Thanks
 ------
 
-Big ups to Harry Percival for an invaluable chat about sensible approaches.
+Big ups to Christian Muirhead for an invaluable review of my approach.
+
+
+Contact
+-------
+
+Written by Jonathan Hartley, tartley at tartley dot com
 
