@@ -1,0 +1,48 @@
+
+Start TDD
+
+Create a demo of browsing from / to all of the specced functions. Use this
+demo to determine what content to put in the JSON representation of resources.
+
+Reimplement get_subcategories and the other functions
+
+Consider whether we need to add get_category()
+
+Add some sort of redirect or something to handle URI /
+
+Replace the temp backing store with something that is actually persistant.
+MySQL? Examples in web.py docs show use with PostGres.
+
+Consider whereabouts in the code should the conversion to/from JSON
+representations be being done?
+
+Consider what status codes should be being returned
+    
+Make an sdist? Upload to PyPI.
+
+Consider how Simon could install and run this if he wanted. Make it easy
+for him.
+
+Test on Ubuntu.
+
+Review README.
+
+
+DONE
+----
+
+Hello world web service, using web.py
+
+Figure out first draft of resources, representations of them, URIs
+
+Whip up a fake database using a dictionary for storage, use it as a temp
+back end to get started
+
+Modify the interface of the functions given in the spec (using category name
+as a uid doesn't work for me)
+
+Spike a quick implementation of one of the specced functions,
+get_subcategories().
+
+Tie spiked get_subcategories() to a URL. See it working in a browser.
+

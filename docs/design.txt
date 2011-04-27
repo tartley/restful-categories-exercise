@@ -1,0 +1,204 @@
+
+Spec API
+--------
+
+Spec requires that we provide:
+
+    add_category(category, parent)
+    get_subcategories(category)
+    get_lineage(category)
+
+
+Thoughts
+--------
+
+The spec contains some ambiguity, or at least things that aren't yet obvious to
+me. With a real client I'd communicate a lot to resolve that, but in this case,
+I'll take it as read that's part of the exercise, and use my own best judgement
+instead. Specifically:
+
+The spec as written doesn't seem quite adequate, because specifying a category
+by its name seems potentially ambiguous. There could be more than one
+category with the same name, but with different parents. So I'm going to
+modify the spec to take UIDs instead of names.
+
+I'm really not sure about a lot of this - I've only written one web-app in the
+last year, and none before that since about 1998, but I'm reading up on it as I
+go and we'll see how it turns out.
+
+I'm familiar with Django, but suspect it's more heavyweight than I need for
+this exercise. Googling for lightweight web frameworks, I'm going to run with
+web.py. Haven't used it before.
+
+
+Resources
+---------
+
+First I enumerate the resources I think we'll be dealing with:
+
+    Categories
+
+    Collection of categories
+
+We'll need to represent these resources. I'll choose JSON over XML for today,
+just because it's more succinct and human-readable.
+
+
+Representations
+---------------
+
+    When I first wrote this section, I was visualising driving a demo of the
+    API from a browser, so I was thinking in terms of representing resources as
+    HTML, and drafted possible html representation of the resources. However,
+    after reading more (esp. the final line of the spec), I think it's more
+    appropriate to just think about JSON representations for now. 
+
+    Category:
+    {
+        name: NAME,
+        parent: CATEGORY_URI,
+        children: CATEGORY_LIST_URI,
+        lineage: CATEGORY_LIST_URI,
+    }
+
+    Parent may be null, representing a top-level category.
+
+    When I first wrote this, I represented a category's parent as the UID of
+    the parent category, but on reading more about restful APIs, I've changed
+    that to be the URI of the parent category.
+
+    Collection of categories:
+    [
+        { name: NAME, uri: CATEGORY_URI },
+        { name: NAME, uri: CATEGORY_URI },
+        { name: NAME, uri: CATEGORY_URI },
+        ...
+    ]
+
+
+We need to represent the API entry points as explorable URIs:
+
+    Get list of services from root:
+
+        GET /
+        =>
+        {
+            Categories: 'http://server/categories/'
+        }
+
+    Get a list of top-level categories:
+        
+        GET /categories/
+        =>
+        [
+            '/category/1',
+            '/category/2',
+            '/category/3',
+            ...
+        ]
+
+
+Q: Should a category URI expose the database ID of the category (an
+implementation detail, surely? Or should it use the category name (not
+unique, surely?) Or should it use the tree-structure to specify the
+path to the category from the top level? (verbose, but maybe best?)
+
+    Add a new top-level category:
+
+        POST /categories/ name=Garden
+        =>
+        '/category/5'
+
+Q: Should we return a link to the created resource like this, or a
+redirect to the resource details?
+
+
+        Note: using JSON 'null' to express the parent of top-level
+        packages.
+
+
+    GET /category/ID
+    =>
+    {
+        name: NAME,
+        parents: CATEGORY_URI,
+    }
+
+        To retrieve the representation of this category
+            200 if ID extant
+            400 if ID invalid
+            410 otherwise
+        Not directly required by spec, but added by me
+        Returns specified category as JSON
+
+        POST(name)
+            To create a new child category
+            Not sure whether it best to respond with the ID of the created
+            category (i.e. its URI) or proceed directly to its representation
+            (by returning a redirect response to the URI.) 
+            Responds with representation of created category? Or with
+            Q: as a redirect to the category uri?
+                400 if name invalid
+                201 if successful
+            Required to fulfill add_category()
+
+    /categories/ID/lineage
+
+        GET (no params)
+            To retrieve all subcats of ID
+            If ID is missing, then the top-level subcats are returned.
+            Required to provide get_subcategories()
+
+    /categories/ID/children
+
+        GET (no params)
+            To retrieve lineage of ID
+            ID is mandatory
+            Required to fulfill get_lineage()
+
+            
+    At first I structured the URIs to list a category's parents and
+    children like this:
+
+        /children/ID
+        /parents/ID
+
+    But reading some more, I've since switched to:
+
+
+
+Research
+--------
+
+    "Introduce people to your service with a single URI.
+    Clients then only need to construct URIs when they are building queries
+    (and thus using query strings). Those queries return references to objects
+    with opaque URIs to be used by the client."
+
+    In particular, do not use GET with "someuri?action=delete"
+    Presuambly, Instead, use DELETE with "category/123"
+
+
+
+Methods & likely statuses
+-------------------------
+
+    GET     read        200            301       404 410
+    POST    creation         201            400
+    PUT     update      200            301  400      410 
+    DELETE  delete      200       204
+
+    Pretend POST means "create new URI as child of the current URI."
+
+
+Status codes
+------------
+
+    200 OK
+    201 Created
+    204 No content
+    301 Moved permenently
+    400 Bad request
+    404 Not found
+    410 Gone
+
