@@ -1,5 +1,5 @@
 
-from storage import all_categories
+from .storage import all_categories
 
 
 # supported API

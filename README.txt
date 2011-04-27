@@ -6,8 +6,16 @@ Dependencies
 ------------
 
   * Tested on Windows XP
-  * Python 2.7, with installed packages:
-    * web.py
+  * Python 2.7
+
+Requires Python packages:
+
+  * web.py
+
+For development & running tests, also requires Python packages:
+
+  * nose
+  * mock
 
 
 Usage

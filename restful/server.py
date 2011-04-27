@@ -3,7 +3,7 @@ import json
 
 import web
 
-from api import get_subcategories
+from .api import get_subcategories
 
 
 urls = (

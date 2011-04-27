@@ -29,7 +29,8 @@ profile:
 
 
 tests:
-	python -m unittest discover -v ${NAME}
+	# python -m unittest discover -v ${NAME}
+	nosetests ${NAME}
 .PHONY: tests
 
 
