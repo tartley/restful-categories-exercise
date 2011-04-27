@@ -6,7 +6,7 @@
 
 NAME := restful
 RELEASE := $(shell python -c "from ${NAME} import RELEASE; print(RELEASE)")
-SCRIPT := $(shell python -c "from setup import SCRIPT; print(SCRIPT)")
+# SCRIPT := $(shell python -c "from setup import SCRIPT; print(SCRIPT)")
 
 
 clean:
@@ -29,7 +29,7 @@ profile:
 
 
 tests:
-	python -m unittest discover -v .
+	python -m unittest discover -v ${NAME}
 .PHONY: tests
 
 
