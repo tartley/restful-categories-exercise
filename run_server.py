@@ -1,4 +1,4 @@
 
-from server.server import main
+from restful.server import main
 main()
 
