@@ -48,9 +48,7 @@ def add_category(name, parent_id=None):
     return new_category
 
 def get_subcategories(category_id):
-    print category_id
     category = all_categories.get(category_id, None)
-    print category
     if category:
         return [
             child.name
@@ -81,8 +79,11 @@ urls = (
     '/children/(.*)', 'Children',
     #'/lineage/(.*)',
 )
-app = web.application(urls, globals())
 
+
+def main():
+    app = web.application(urls, globals())
+    app.run()
 
 
 # handlers
@@ -110,7 +111,4 @@ class Children(object):
         #   { parent_id: ID }
         #pass
 
-
-if __name__ == "__main__":
-    app.run()
 
