@@ -6,7 +6,7 @@ import json
 
 import web
 
-from .representation import category_info
+from .representation import category_detail, category_info
 from .storage import all_categories, ModelCategory
 
 
@@ -23,7 +23,11 @@ def _make_int(cat_id):
 
 
 def get_category(category_id):
-    return all_categories[_make_int(category_id)]
+    return json.dumps(
+        category_detail(
+            all_categories[_make_int(category_id)]
+        )
+    )
 
 
 def get_subcategories(category_id):

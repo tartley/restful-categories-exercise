@@ -37,7 +37,7 @@ class Children(object):
 class Category(object):
 
     def GET(self, cat_id):
-        return json.dumps( category_detail( get_category(cat_id) ) )
+        return get_category(cat_id)
 
     #def PUT(self, category):
         # create new category
