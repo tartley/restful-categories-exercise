@@ -30,7 +30,6 @@ def category_detail(category):
     return dict(
         name=category.name,
         parent=category_uri(category.parent),
-        uri=category_uri(category),
         children=children_uri(category),
         lineage=lineage_uri(category),
     )

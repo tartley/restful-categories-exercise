@@ -91,7 +91,6 @@ class AT01_Test_Browse_The_Api(TestCase):
         expected = dict(
             name=loaded['name'],
             parent=CATEGORY_URI,
-            uri=CATEGORY_URI + books_uid,
             children=CHILDREN_URI + books_uid,
             lineage=LINEAGE_URI + books_uid,
         )
