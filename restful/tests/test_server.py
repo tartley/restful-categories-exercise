@@ -26,6 +26,9 @@ class TestChildren(TestCase):
     @patch('restful.api.web')
     @patch('restful.api.all_categories', test_categories)
     def test_GET_ok(self, mock_web):
+        '''
+        valid request returns json representation
+        '''
         mock_web.ctx.homedomain = 'SERVER'
 
         response = Children().GET(footwear.uid)
@@ -36,15 +39,23 @@ class TestChildren(TestCase):
         ])
         self.assertEqual(response, expected)
 
+
     @skip("Raising web.badrequest() doesn't return a 400 error as I'd expect")
     @patch('restful.api.all_categories', test_categories)
     def test_GET_invalid_catid(self):
+        '''
+        requesting an invalid category ID raises a 400 error
+        '''
         with self.assertRaises(HTTPError) as cm:
             Children().GET('abc')
+
 
     @patch('restful.api.web')
     @patch('restful.api.all_categories', test_categories)
     def test_GET_no_catid(self, mock_web):
+        '''
+        requesting no category ID at all responds with top level cats
+        '''
         mock_web.ctx.homedomain = 'SERVER'
 
         response = Children().GET()

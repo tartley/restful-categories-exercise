@@ -1,9 +1,10 @@
 
 import json
-from subprocess import check_output, Popen, STDOUT
+from subprocess import check_output, Popen, PIPE, STDOUT
 from unittest import TestCase, main
 
 from restful.storage import add, ModelCategory
+from restful.storage import books, electronics
 
 
 class Null(object):
@@ -16,22 +17,6 @@ class Null(object):
         pass
 
 
-electronics = ModelCategory('Electronics')
-books = ModelCategory('Books')
-fiction = ModelCategory('Fiction', books)
-nonfiction = ModelCategory('Non-Fiction', books)
-
-
-def use_test_database():
-    # When storage layer is replaced with a DB,
-    # this function will just connect to a test DB instead of the live one
-    # For now it just populates the DB with some test data
-    add(electronics)
-    add(books)
-    add(fiction)
-    add(nonfiction)
-
-
 
 class AT01_Test_Browse_The_Api(TestCase):
     '''
@@ -41,7 +26,6 @@ class AT01_Test_Browse_The_Api(TestCase):
     and only using URI's that are returned in responses to us.
     '''
     def setUp(self):
-        use_test_database()
         self.server = Popen(
             'python run_server.py'.split(),
             stdout=Null(),
@@ -51,15 +35,14 @@ class AT01_Test_Browse_The_Api(TestCase):
     def tearDown(self):
         self.server.kill()
 
-    def assert_response(self, query, response_content, status='200 OK'):
+    def assert_response(self, query, expected_content):
         output = check_output(
-            ('curl -v -X %s' % (query,)).split(),
-            stderr=STDOUT
+            ('curl -v -# -X %s' % (query,)).split(),
+            stderr=PIPE,
         )
-        self.assertIn('HTTP/1.1 %s' % (status,), output)
-        self.assertTrue(
-            output.endswith(response_content),
-            '"%s" should end with "%s"' % (output, response_content)
+        self.assertEquals(
+            json.loads(output),
+            expected_content
         )
 
     def test_browse_the_api(self):
@@ -68,16 +51,16 @@ class AT01_Test_Browse_The_Api(TestCase):
         # It returns a response containing all top level categories
         self.assert_response(
             'GET http://localhost:8080/',
-            json.dumps( [
+            [
                 {
-                    'name': 'Books',
-                    'uri': 'http://localhost:8080/category/%d' % (books.uid,)
+                    'uri': 'http://localhost:8080/category/%d' % (electronics.uid,),
+                    'name': 'Electronics',
                 },
                 {
-                    'name': 'Electronics',
-                    'uri': 'http://localhost:8080/category/%d' % (electronics.uid,)
-                }
-            ] )
+                    'uri': 'http://localhost:8080/category/%d' % (books.uid,),
+                    'name': 'Books',
+                },
+            ]
         )
 
 
