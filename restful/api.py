@@ -61,7 +61,7 @@ def add_category(name, parent_id=None):
     '''
     Adds a new category as a direct child of the given parent category.
 
-    Example: add_category(‘Science Fiction’, FICTION_ID) will add Science
+    Example: add_category('Science Fiction', FICTION_ID) will add Science
     Fiction as a new subcategory of Fiction.
 
     If parent is omitted, adds a new top-level category
