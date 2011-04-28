@@ -33,11 +33,10 @@ class Children(object):
     """
     def GET(self, cat_id=None):
         cat_id = _make_int(cat_id)
-        return get_subcategories(cat_id)
+        return json.dumps( get_subcategories(cat_id) )
 
     def POST(self, cat_id=None):
-        category = add_category(web.input().name)
-        return category_to_json(category)
+        return category_to_json(add_category(web.input().name))
 
 
 #class Category(object):

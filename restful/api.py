@@ -27,11 +27,11 @@ def _cat_to_dict(category):
 
 def get_subcategories(category_id):
     category = all_categories.get(category_id, None)
-    return json.dumps([
+    return [
         _cat_to_dict(child)
         for child in all_categories.itervalues()
         if child.parent == category
-    ])
+    ]
 
 
 #def get_lineage(category_id):
