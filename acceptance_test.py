@@ -54,12 +54,6 @@ class AT01_Test_Browse_The_Api(TestCase):
         return check_output(command.split(), stderr=PIPE)
 
 
-    def make_POST_request2(self, url, params=''):
-        url = 'http://localhost:8080' + url
-        command = 'curl -v -# -d "%s" -X POSTg %s' % (params, url)
-        return check_output(command.split(), stderr=PIPE)
-
-
     def make_POST_request(self, url, params=''):
         url = 'http://localhost:8080' + url
         if params:
@@ -69,6 +63,9 @@ class AT01_Test_Browse_The_Api(TestCase):
 
 
     def test_browse_the_api(self):
+
+        # test assumes we start with an empty database
+        # setUp should create a test database to ensure this is so
 
         # Start by requesting the root URI, /
         response = self.make_GET_request('/')
@@ -87,12 +84,14 @@ class AT01_Test_Browse_The_Api(TestCase):
         self.assertEquals( loaded_response['name'], 'Books')
         books_uri = loaded_response['uri']
 
-        # the new category is visible in list of top level categories
-        response = self.make_GET_request('/')
+        # the new Books category is visible in the list of top level categories
+        response = json.loads( self.make_GET_request('/') )
         self.assertEquals(
-            json.loads(response),
+            response,
             [{'name':'Books', 'uri':unknown}]
         )
+        self.assertEquals(response[0]['uri'], books_uri)
+
 
 
 
