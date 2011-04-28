@@ -1,10 +1,13 @@
+'''
+API defined by the spec
+'''
 
 import json
 
+import web
+
 from .storage import all_categories
 
-
-# supported API
 
 #def add_category(name, parent_id=None):
     #parent = None
@@ -15,16 +18,19 @@ from .storage import all_categories
     #all_categories[ new_category.uid ] = new_category
     #return new_category
 
+def _cat_to_dict(category):
+    return dict(
+        name=category.name,
+        uri='%s/category/%d' % (web.ctx.homedomain, category.uid)
+    )
+
 def get_subcategories(category_id):
     category = all_categories.get(category_id, None)
-    if category:
-        return json.dumps([
-            child.name
-            for child in all_categories.itervalues()
-            if child.parent == category
-        ])
-    else:
-        raise Exception('???')
+    return json.dumps([
+        _cat_to_dict(child)
+        for child in all_categories.itervalues()
+        if child.parent == category
+    ])
 
 #def get_lineage(category_id):
     #lineage = []

@@ -1,4 +1,5 @@
 
+import json
 from unittest import skip, TestCase
 from urllib2 import HTTPError
 
@@ -22,10 +23,18 @@ test_categories = {
 
 class TestChildren(TestCase):
 
+    @patch('restful.api.web')
     @patch('restful.api.all_categories', test_categories)
-    def test_GET_ok(self):
+    def test_GET_ok(self, mock_web):
+        mock_web.ctx.homedomain = 'SERVER'
+
         response = Children().GET(footwear.uid)
-        self.assertEqual(response, '["shoes", "wellies"]')
+
+        expected = json.dumps([
+            dict(name='shoes', uri='SERVER/category/%d' % (shoes.uid,)),
+            dict(name='wellies', uri='SERVER/category/%d' % (wellies.uid,)),
+        ])
+        self.assertEqual(response, expected)
 
     @skip("Raising web.badrequest() doesn't return a 400 error as I'd expect")
     @patch('restful.api.all_categories', test_categories)
@@ -33,13 +42,17 @@ class TestChildren(TestCase):
         with self.assertRaises(HTTPError) as cm:
             Children().GET('abc')
 
+    @patch('restful.api.web')
     @patch('restful.api.all_categories', test_categories)
-    def test_GET_no_catid(self):
+    def test_GET_no_catid(self, mock_web):
+        mock_web.ctx.homedomain = 'SERVER'
+
         response = Children().GET()
+
         expected = json.dumps( [
             {
-                'name': 'Footwear',
-                'uri': 'http://localhost:8080/category/%d' % (footwear.uid,)
+                'uri': 'SERVER/category/%d' % (footwear.uid,),
+                'name': 'footwear',
             },
         ] )
         self.assertEquals(response, expected)
