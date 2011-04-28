@@ -44,8 +44,10 @@ or::
 Running tests using 'python -m unittest' will not work, since this does not
 play nicely with relative imports in the product code, which I do use.
 
-Unit tests have very limited coverage. The single acceptance test exercises all
-API entry points, but does not attempt to stimulate any error conditions.
+The single acceptance test exercises all API entry points, but does not attempt
+to stimulate any error conditions.
+
+Unit tests have very limited coverage.
 
 All tests currently pass.
 
@@ -87,10 +89,10 @@ category::
 
     {
         name="NAME",
-        uri="CAT_URI",
-        parent="CAT_URI",
-        children="CHILD_URI",
-        lineage="LINEAGE_URI",
+        uri="/category/XX",
+        parent="/category/YY",
+        children="/children/XX",
+        lineage="/lineage/XX",
     }
 
 category_list::
@@ -98,7 +100,7 @@ category_list::
     [
         {
             name="NAME",
-            uri="CAT_URI",
+            uri="/category/XX",
         },
         ...
     ]
