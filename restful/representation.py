@@ -19,13 +19,6 @@ def lineage_uri(category):
     return web.ctx.homedomain + '/lineage/%d' % (category.uid,)
 
 
-def category_info(category):
-    return dict(
-        name=category.name,
-        uri=category_uri(category),
-    )
-
-
 def category_detail(category):
     return dict(
         uri=category_uri(category),
@@ -37,5 +30,11 @@ def category_detail(category):
 
 
 def category_list(cats):
-    return [ category_info(cat) for cat in cats ]
+    return [
+        dict(
+            name=cat.name,
+            uri=category_uri(cat),
+        )
+        for cat in cats
+    ]
 

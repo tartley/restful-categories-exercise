@@ -1,37 +1,19 @@
 
-Start TDD
+Consider what status codes should be being returned
+Web.py raises AttributeError if I try to raise notfound or badrequest.
+Haven't figured out why.
 
-FT using command-line invokation of curl:
-    curl [-v -X] GET http://localhost:8080/
-    etc
-
-Create a demo of browsing from / to all of the specced functions. Use this
-demo to determine what content to put in the JSON representation of resources.
-
-Reimplement get_subcategories and the other functions
-
-Consider whether we need to add get_category()
-
-Add some sort of redirect or something to handle URI /
+Return the right content-type: (application/json), using:
+    web.header("Content-Type", 'application/json')
+web.py raises AttributeError if I try.
+Haven't figured out why.
 
 Replace the temp backing store with something that is actually persistant.
 MySQL? Examples in web.py docs show use with PostGres.
-
-Consider whereabouts in the code should the conversion to/from JSON
-representations be being done?
-
-Return the right content-type:
-        web.header("Content-Type", 'application/json')
-
-Vary the content type depenant on the acceptable types in the request
-headers
-
-Consider what status codes should be being returned
     
 Make an sdist? Upload to PyPI.
 
-Consider how Simon could install and run this if he wanted. Make it easy
-for him.
+Consider how Simon could install and run this if he wanted. Make it easy.
 
 Test on Ubuntu.
 
@@ -55,4 +37,22 @@ Spike a quick implementation of one of the specced functions,
 get_subcategories().
 
 Tie spiked get_subcategories() to a URL. See it working in a browser.
+
+Start TDD
+
+FT using command-line invokation of curl:
+    curl [-v -X] GET http://localhost:8080/
+    etc
+
+Create a demo of browsing from / to all of the specced functions. Use this
+demo to determine what content to put in the JSON representation of resources.
+
+Reimplement get_subcategories and the other functions
+
+Consider whether we need to add get_category()
+
+Add some sort of redirect or something to handle URI /
+
+Consider whereabouts in the code should the conversion to/from JSON
+representations be being done?
 
