@@ -20,21 +20,3 @@ all_categories = {}
 def add(category):
     all_categories[category.uid] = category
 
-
-
-electronics = ModelCategory('Electronics')
-books = ModelCategory('Books')
-fiction = ModelCategory('Fiction', books)
-nonfiction = ModelCategory('Non-Fiction', books)
-
-
-# When storage layer is replaced with a DB,
-# this function will just connect to a test DB instead of the live one
-# For now it just populates the DB with some test data
-add(electronics)
-add(books)
-add(fiction)
-add(nonfiction)
-
-
-

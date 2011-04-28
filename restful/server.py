@@ -4,7 +4,8 @@ from urllib2 import HTTPError
 
 import web
 
-from .api import get_subcategories
+from .api import add_category, get_subcategories
+from .representation import category_to_json
 
 
 urls = (
@@ -16,29 +17,33 @@ urls = (
 
 
 
+def _make_int(cat_id):
+    if cat_id is not None:
+        try:
+            return int(cat_id)
+        except ValueError:
+            # I'd like to raise web.badrequest() here, but it doesn't
+            # return a 400 status like I'd expect.
+            raise
+
+
 class Children(object):
     """
     handler of requests for the children of a given category
     """
-    def GET(self, catid=None):
-        if catid is not None:
-            try:
-                catid = int(catid)
-            except ValueError:
-                # I'd like to raise web.badrequest() here, but it doesn't return
-                # a 400 error like I'd expect.
-                raise
+    def GET(self, cat_id=None):
+        cat_id = _make_int(cat_id)
+        return get_subcategories(cat_id)
 
-        return get_subcategories(catid)
+    def POST(self, cat_id=None):
+        category = add_category(web.input().name)
+        return category_to_json(category)
 
-    #def POST(self, catid):
-        #new_category = add_category(web.input().name)
-        #raise web.seeother('/category/%s' % (new_category.uid))
 
 #class Category(object):
 
-    #def GET(self, catid):
-        #return get_category(catid)
+    #def GET(self, cat_id):
+        #return get_category(cat_id)
         #return json.dumps( {categories:'/categories/'} )
 
     #def PUT(self, category):
