@@ -21,7 +21,7 @@ class Children(object):
     handler of requests for the children of a given category
     """
     def GET(self, cat_id=None):
-        return json.dumps( get_subcategories(cat_id) )
+        return get_subcategories(cat_id)
 
     def POST(self, parent_id=None):
         cat_name = web.input().name

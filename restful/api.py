@@ -32,11 +32,13 @@ def get_category(category_id):
 
 def get_subcategories(category_id):
     category = all_categories.get(_make_int(category_id), None)
-    return [
-        category_info(child)
-        for child in all_categories.itervalues()
-        if child.parent == category
-    ]
+    return json.dumps(
+        [
+            category_info(child)
+            for child in all_categories.itervalues()
+            if child.parent == category
+        ]
+    )
 
 
 def add_category(name, parent_id=None):
