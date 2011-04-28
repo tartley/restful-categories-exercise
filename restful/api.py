@@ -10,13 +10,24 @@ from .representation import category_info
 from .storage import all_categories, ModelCategory
 
 
+
+def _make_int(cat_id):
+    if cat_id is not None:
+        try:
+            return int(cat_id)
+        except ValueError:
+            # I'd like to raise web.badrequest() here, but it doesn't
+            # return a 400 status like I'd expect.
+            raise
+
+
+
 def get_category(category_id):
-    category = all_categories[category_id]
-    return category
+    return all_categories[_make_int(category_id)]
 
 
 def get_subcategories(category_id):
-    category = all_categories.get(category_id, None)
+    category = all_categories.get(_make_int(category_id), None)
     return [
         category_info(child)
         for child in all_categories.itervalues()
@@ -27,7 +38,7 @@ def get_subcategories(category_id):
 def add_category(name, parent_id=None):
     parent = None
     if parent_id:
-        parent = all_categories[parent_id]
+        parent = all_categories[_make_int(parent_id)]
 
     new_category = ModelCategory(name, parent)
     all_categories[ new_category.uid ] = new_category
