@@ -1,5 +1,6 @@
 
-from unittest import TestCase
+from unittest import skip, TestCase
+from urllib2 import HTTPError
 
 import web
 from mock import patch
@@ -23,4 +24,11 @@ class TestChildren(TestCase):
     def test_GET_ok(self):
         response = Children().GET(footwear.uid)
         self.assertEqual(response, '["shoes", "wellies"]')
+
+
+    @skip("Raising web.badrequest() doesn't return a 400 error as I'd expect")
+    @patch('restful.api.all_categories', test_categories)
+    def test_GET_invalid_catid(self):
+        with self.assertRaises(HTTPError) as cm:
+            Children().GET('abc')
 

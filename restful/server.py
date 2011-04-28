@@ -1,5 +1,6 @@
 
 import json
+from urllib2 import HTTPError
 
 import web
 
@@ -16,14 +17,22 @@ urls = (
 
 
 class Children(object):
-
+    """
+    handler of requests for the children of a given category
+    """
     def GET(self, catid):
-        return get_subcategories(int(catid))
+        try:
+            int_catid = int(catid)
+        except ValueError:
+            # I'd like to raise web.badrequest() here, but it doesn't return
+            # a 400 error like I'd expect.
+            raise
+
+        return get_subcategories(int_catid)
 
     #def POST(self, catid):
         #new_category = add_category(web.input().name)
         #raise web.seeother('/category/%s' % (new_category.uid))
-
 
 #class Category(object):
 
