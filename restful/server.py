@@ -36,6 +36,7 @@ class Children(object):
         return json.dumps( get_subcategories(cat_id) )
 
     def POST(self, cat_id=None):
+        print 'recieved POST'
         return category_to_json(add_category(web.input().name))
 
 

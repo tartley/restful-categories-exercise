@@ -16,6 +16,18 @@ class Null(object):
         pass
 
 
+class Unknown(object):
+    '''
+    Equal to everything. Used as a placeholder for values we don't know
+    when comparing collections full of values.
+    '''
+    def __eq__(*_):
+        return True
+    def __neq__(*_):
+        return False
+
+unknown = Unknown()
+
 
 class AT01_Test_Browse_The_Api(TestCase):
     '''
@@ -36,17 +48,30 @@ class AT01_Test_Browse_The_Api(TestCase):
         self.server.kill()
 
 
-    def make_request(self, url, params=''):
+    def make_GET_request(self, url):
+        url = 'http://localhost:8080' + url
+        command = 'curl -v -# s -X GET %s' % (url,)
+        return check_output(command.split(), stderr=PIPE)
+
+
+    def make_POST_request2(self, url, params=''):
+        url = 'http://localhost:8080' + url
+        command = 'curl -v -# -d "%s" -X POSTg %s' % (params, url)
+        return check_output(command.split(), stderr=PIPE)
+
+
+    def make_POST_request(self, url, params=''):
+        url = 'http://localhost:8080' + url
         if params:
-            params = ' -d ' + params
-        command = 'curl -v -#%s -X %s' % (params, url)
+            params = '-d ' + params
+        command = 'curl -v -# %s -X POST %s' % (params, url)
         return check_output(command.split(), stderr=PIPE)
 
 
     def test_browse_the_api(self):
 
         # Start by requesting the root URI, /
-        response = self.make_request('GET http://localhost:8080/')
+        response = self.make_GET_request('/')
 
         # It returns a response containing a list of all top level categories
         # which is empty
@@ -54,9 +79,7 @@ class AT01_Test_Browse_The_Api(TestCase):
 
         # make a post request to the root URL
         # This creates a new top-level category
-        response = self.make_request(
-            'POST http://localhost:8080/', params='name=Books',
-        )
+        response = self.make_POST_request('/', params='name=Books')
 
         # The response describes the new category
         loaded_response = json.loads(response)
@@ -65,21 +88,11 @@ class AT01_Test_Browse_The_Api(TestCase):
         books_uri = loaded_response['uri']
 
         # the new category is visible in list of top level categories
-        response = self.make_request('GET http://localhost:8080/')
-        #expected = [
-        #        {
-        #            'uri': 'http://localhost:8080/category/%d' % (electronics.uid,),
-        #            'name': 'Electronics',
-        #        },
-        #        {
-        #            'uri': 'http://localhost:8080/category/%d' % (books.uid,),
-        #            'name': 'Books',
-        #        },
-        #    ]
-        #self.assertEquals( json.loads(response), expected )
-
-
-
+        response = self.make_GET_request('/')
+        self.assertEquals(
+            json.loads(response),
+            [{'name':'Books', 'uri':unknown}]
+        )
 
 
 
