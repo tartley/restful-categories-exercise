@@ -5,7 +5,6 @@ from urllib2 import HTTPError
 import web
 
 from .api import add_category, get_category, get_subcategories
-from .representation import category_info, category_detail
 
 
 urls = (
@@ -24,14 +23,8 @@ class Children(object):
         return get_subcategories(cat_id)
 
     def POST(self, parent_id=None):
-        cat_name = web.input().name
-        return (
-            json.dumps(
-                category_info(
-                    add_category(cat_name, parent_id)
-                )
-            )
-        )
+        category_name = web.input().name
+        return add_category(category_name, parent_id)
 
 
 class Category(object):
