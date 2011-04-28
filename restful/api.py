@@ -37,6 +37,16 @@ def get_category(category_id):
 
 
 def get_subcategories(category_id):
+    '''
+    For the given category, returns a list of its immediate children in the
+    tree.
+
+    Example, get_subcategories(BOOK_ID) returns the following, as JSON:
+    [
+        {name='Fiction', uri=FICTION_URI},
+        {name='Non-Fiction', uri=NON_FICTION_URI},
+    ]
+    '''
     category = all_categories.get(_make_int(category_id), None)
     return json.dumps(
         category_list( [
@@ -48,6 +58,16 @@ def get_subcategories(category_id):
 
 
 def add_category(name, parent_id=None):
+    '''
+    Adds a new category as a direct child of the given parent category.
+
+    Example: add_category(‘Science Fiction’, FICTION_ID) will add Science
+    Fiction as a new subcategory of Fiction.
+
+    If parent is omitted, adds a new top-level category
+
+    Returns the JSON representation of the newly-added category.
+    '''
     parent = None
     if parent_id:
         parent = all_categories[_make_int(parent_id)]
@@ -60,6 +80,15 @@ def add_category(name, parent_id=None):
 
 
 def get_lineage(category_id):
+    '''
+    For a given category, retrieve a list showing its ancestry within the
+    tree. Example: get_lineage(LAPTOPS_ID) returns
+    [
+        {name='Electronics', uri=ELECTRONICS_URI},
+        {name='Computers', uri=COMPUTERS_URI},
+        {name='Laptops', uri=LAPTOPS_URI},
+    ]
+    '''
     lineage = []
     category = all_categories[_make_int(category_id)]
     while True:
