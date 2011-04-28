@@ -50,6 +50,17 @@ class AT01_Test_Browse_The_Api(TestCase):
         return check_output(command.split(), stderr=PIPE)
 
 
+    def post_new_category(self, uri, name):
+        response = self.make_request('POST', uri, params='name=%s' % (name,))
+        loaded_response = json.loads(response)
+        self.assertEqual(
+            loaded_response,
+            {'name':name, 'uri':unknown}
+        )
+        uri = loaded_response['uri']
+        self.assertTrue(uri.startswith(CATEGORY_URI))
+        return uri
+
 
     def test_browse_the_api(self):
 
@@ -98,26 +109,10 @@ class AT01_Test_Browse_The_Api(TestCase):
         books_children_uri = loaded['children']
 
         # post a new Fiction subcategory under Books
-        response = self.make_request(
-            'POST', books_children_uri, params='name=Fiction'
-        )
-        loaded_response = json.loads(response)
-        self.assertEqual(
-            loaded_response,
-            {'name':'Fiction', 'uri':unknown}
-        )
-        fiction_uri = loaded_response['uri']
+        fiction_uri = self.post_new_category(books_children_uri, 'Fiction')
 
         # post a new Non-Fiction subcategory under Books
-        response = self.make_request(
-            'POST', books_children_uri, params='name=Non-Fiction'
-        )
-        loaded_response = json.loads(response)
-        self.assertEqual(
-            loaded_response,
-            {'name':'Non-Fiction', 'uri':unknown}
-        )
-        nonfiction_uri = loaded_response['uri']
+        nonfic_uri = self.post_new_category(books_children_uri, 'Non-Fiction')
 
         # get the Books children uri to check the two new subcategories
         response = self.make_request('GET', books_children_uri)
@@ -127,6 +122,15 @@ class AT01_Test_Browse_The_Api(TestCase):
             {'name':'Non-Fiction', 'uri':unknown},
         ]
         self.assertEqual(loaded, expected)
+        self.assertTrue(loaded[0]['uri'].startswith(CATEGORY_URI))
+        self.assertTrue(loaded[1]['uri'].startswith(CATEGORY_URI))
+
+        # post new category 'Geography' under 'Non-Fiction'
+        geog_uri = self.post_new_category(nonfic_uri, 'Geography')
+
+        # post new category 'Maps' under 'Geography'
+        geog_uri = self.post_new_category(geog_uri, 'Geography')
+
 
 
 if __name__ == '__main__':
