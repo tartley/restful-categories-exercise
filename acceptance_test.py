@@ -95,6 +95,38 @@ class AT01_Test_Browse_The_Api(TestCase):
             lineage=LINEAGE_URI + books_uid,
         )
         self.assertEqual(loaded, expected)
+        books_children_uri = loaded['children']
+
+        # post a new Fiction subcategory under Books
+        response = self.make_request(
+            'POST', books_children_uri, params='name=Fiction'
+        )
+        loaded_response = json.loads(response)
+        self.assertEqual(
+            loaded_response,
+            {'name':'Fiction', 'uri':unknown}
+        )
+        fiction_uri = loaded_response['uri']
+
+        # post a new Non-Fiction subcategory under Books
+        response = self.make_request(
+            'POST', books_children_uri, params='name=Non-Fiction'
+        )
+        loaded_response = json.loads(response)
+        self.assertEqual(
+            loaded_response,
+            {'name':'Non-Fiction', 'uri':unknown}
+        )
+        nonfiction_uri = loaded_response['uri']
+
+        # get the Books children uri to check the two new subcategories
+        response = self.make_request('GET', books_children_uri)
+        loaded = json.loads( response )
+        expected = [
+            {'name':'Fiction', 'uri':unknown},
+            {'name':'Non-Fiction', 'uri':unknown},
+        ]
+        self.assertEqual(loaded, expected)
 
 
 if __name__ == '__main__':

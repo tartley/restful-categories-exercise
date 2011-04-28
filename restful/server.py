@@ -40,7 +40,7 @@ class Children(object):
         return (
             json.dumps(
                 category_info(
-                    add_category(cat_name, parent_id)
+                    add_category(cat_name, _make_int(parent_id) )
                 )
             )
         )
@@ -50,7 +50,7 @@ class Category(object):
 
     def GET(self, cat_id):
         cat_id = _make_int(cat_id)
-        return json.dumps( category_detail( get_category(cat_id) ) )
+        return json.dumps( category_detail( get_category( _make_int(cat_id) )))
 
     #def PUT(self, category):
         # create new category

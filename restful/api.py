@@ -27,7 +27,7 @@ def get_subcategories(category_id):
 def add_category(name, parent_id=None):
     parent = None
     if parent_id:
-        parent = all_categories.get[parent_id]
+        parent = all_categories[parent_id]
 
     new_category = ModelCategory(name, parent)
     all_categories[ new_category.uid ] = new_category
