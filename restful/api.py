@@ -6,7 +6,7 @@ import json
 
 import web
 
-from .representation import category_detail, category_info, category_list
+from .representation import category_detail, category_list
 from .storage import all_categories, ModelCategory
 
 
@@ -39,11 +39,11 @@ def get_category(category_id):
 def get_subcategories(category_id):
     category = all_categories.get(_make_int(category_id), None)
     return json.dumps(
-        [
-            category_info(child)
+        category_list( [
+            child
             for child in all_categories.itervalues()
             if child.parent == category
-        ]
+        ] )
     )
 
 
