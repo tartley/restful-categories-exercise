@@ -8,7 +8,7 @@ from .api import get_subcategories
 
 
 urls = (
-    #'/',
+    '/', 'Children',
     #'/category/(.*)', 'Category',
     '/children/(.*)', 'Children',
     #'/lineage/(.*)',
