@@ -6,14 +6,8 @@ import json
 
 import web
 
+from .representation import category_info
 from .storage import all_categories, ModelCategory
-
-
-def _cat_to_dict(category):
-    return dict(
-        name=category.name,
-        uri='%s/category/%d' % (web.ctx.homedomain, category.uid)
-    )
 
 
 def get_category(category_id):
@@ -24,7 +18,7 @@ def get_category(category_id):
 def get_subcategories(category_id):
     category = all_categories.get(category_id, None)
     return [
-        _cat_to_dict(child)
+        category_info(child)
         for child in all_categories.itervalues()
         if child.parent == category
     ]

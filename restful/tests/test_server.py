@@ -23,7 +23,11 @@ test_categories = {
 
 class TestChildren(TestCase):
 
-    @patch('restful.api.web')
+    # if we aren't processing a genuine requiest, then a lot of web's
+    # attributes are not populated. Hence we patch web in the
+    # modules under test, to populate the required attributes
+
+    @patch('restful.representation.web')
     @patch('restful.api.all_categories', test_categories)
     def test_GET_ok(self, mock_web):
         '''
@@ -50,7 +54,7 @@ class TestChildren(TestCase):
             Children().GET('abc')
 
 
-    @patch('restful.api.web')
+    @patch('restful.representation.web')
     @patch('restful.api.all_categories', test_categories)
     def test_GET_no_catid(self, mock_web):
         '''
