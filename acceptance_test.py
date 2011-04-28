@@ -10,15 +10,17 @@ CHILDREN_URI = BASE_URI + '/children/'
 LINEAGE_URI = BASE_URI + '/lineage/'
 
 
-class Unknown(object):
+class StartsWith(object):
     '''
-    Equal to everything. Used as a placeholder for values we don't know
+    Equal to everything that starts with the given text.
+    Used as a placeholder for values we don't precisely know
     when comparing collections full of values.
     '''
-    def __eq__(*_):
-        return True
+    def __init__(self, value):
+        self.value = value
+    def __eq__(self, other):
+        return other.startswith(self.value)
 
-unknown = Unknown()
 
 
 class AT01_Test_Browse_The_Api(TestCase):
@@ -55,11 +57,9 @@ class AT01_Test_Browse_The_Api(TestCase):
         loaded_response = json.loads(response)
         self.assertEqual(
             loaded_response,
-            {'name':name, 'uri':unknown}
+            {'name':name, 'uri':StartsWith(CATEGORY_URI)}
         )
-        uri = loaded_response['uri']
-        self.assertTrue(uri.startswith(CATEGORY_URI))
-        return uri
+        return loaded_response['uri']
 
 
     def test_browse_the_api(self):
@@ -82,7 +82,7 @@ class AT01_Test_Browse_The_Api(TestCase):
         loaded_response = json.loads(response)
         self.assertEqual(
             loaded_response,
-            {'name':'Books', 'uri':unknown}
+            {'name':'Books', 'uri':StartsWith(CATEGORY_URI)}
         )
         books_uri = loaded_response['uri']
         books_uid = books_uri.split('/')[-1]
@@ -92,7 +92,7 @@ class AT01_Test_Browse_The_Api(TestCase):
         loaded_response = json.loads( response )
         self.assertEquals(
             loaded_response,
-            [{'name':'Books', 'uri':unknown}]
+            [{'name':'Books', 'uri':books_uri}]
         )
         self.assertEquals(loaded_response[0]['uri'], books_uri)
 
@@ -118,12 +118,10 @@ class AT01_Test_Browse_The_Api(TestCase):
         response = self.make_request('GET', books_children_uri)
         loaded = json.loads( response )
         expected = [
-            {'name':'Fiction', 'uri':unknown},
-            {'name':'Non-Fiction', 'uri':unknown},
+            {'uri':StartsWith(CATEGORY_URI), 'name':'Fiction'},
+            {'uri':StartsWith(CATEGORY_URI), 'name':'Non-Fiction'},
         ]
         self.assertEqual(loaded, expected)
-        self.assertTrue(loaded[0]['uri'].startswith(CATEGORY_URI))
-        self.assertTrue(loaded[1]['uri'].startswith(CATEGORY_URI))
 
         # post new category 'Geography' under 'Non-Fiction'
         geog_uri = self.post_new_category(nonfic_uri, 'Geography')

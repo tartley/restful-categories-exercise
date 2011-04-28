@@ -1,5 +1,4 @@
 
-import json
 from urllib2 import HTTPError
 
 import web
@@ -31,13 +30,6 @@ class Category(object):
 
     def GET(self, cat_id):
         return get_category(cat_id)
-
-    #def PUT(self, category):
-        # create new category
-        # request looks like:
-        #   PUT http://server/category/NAME
-        #   { parent_id: ID }
-        #pass
 
 
 def main():
