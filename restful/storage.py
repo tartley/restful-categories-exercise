@@ -14,19 +14,9 @@ class ModelCategory(object):
         self.name = name
         self.parent = parent
 
-electronics = ModelCategory('Electronics')
-books = ModelCategory('Books')
-fiction = ModelCategory('Fiction', books)
-nonfiction = ModelCategory('Non-Fiction', books)
-
-
 all_categories = {}
+
 
 def add(category):
     all_categories[category.uid] = category
-
-add(electronics)
-add(books)
-add(fiction)
-add(nonfiction)
 
