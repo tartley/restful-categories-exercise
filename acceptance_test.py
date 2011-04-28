@@ -144,7 +144,18 @@ class AT01_Test_Browse_The_Api(TestCase):
 
         # post new category 'Maps' under 'Geography'
         response = self.post_new_category(geog_children_uri, 'Geography')
+        maps_lineage_uri = response['lineage']
 
+        # get the lineage of the new 'Maps' category
+        response = self.make_request('GET', maps_lineage_uri)
+        self.assertEqual(
+            json.loads(response),
+            [
+                dict(name='Geography', uri=StartsWith(CATEGORY_URI)),
+                dict(name='Non-Fiction', uri=StartsWith(CATEGORY_URI)),
+                dict(name='Books', uri=StartsWith(CATEGORY_URI)),
+            ]
+        )
 
 
 if __name__ == '__main__':

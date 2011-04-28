@@ -6,7 +6,7 @@ import json
 
 import web
 
-from .representation import category_detail, category_info
+from .representation import category_detail, category_info, category_list
 from .storage import all_categories, ModelCategory
 
 
@@ -23,6 +23,12 @@ def _make_int(cat_id):
 
 
 def get_category(category_id):
+    '''
+    This API entry point isn't actually required by the spec, I added it
+    to facilitate browsing the API, e.g. going from list of subcats, to
+    getting details for a particular child (using this function), and then
+    adding new subcategories under that child.
+    '''
     return json.dumps(
         category_detail(
             all_categories[_make_int(category_id)]
@@ -53,15 +59,16 @@ def add_category(name, parent_id=None):
     )
 
 
-#def get_lineage(category_id):
-    #lineage = []
-    #category = all_categories[category_id]
-    #while True:
-        #if category.parent:
-            #lineage.append(category.parent)
-            #category = all_categories[ category.parent.uid ]
-        #else:
-            #break
-    #return lineage
-
+def get_lineage(category_id):
+    lineage = []
+    category = all_categories[_make_int(category_id)]
+    while True:
+        if category.parent:
+            lineage.append(category.parent)
+            category = all_categories[ category.parent.uid ]
+        else:
+            break
+    return json.dumps(
+        category_list(lineage)
+    )
 

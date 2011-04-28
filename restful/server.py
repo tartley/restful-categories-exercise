@@ -3,21 +3,16 @@ from urllib2 import HTTPError
 
 import web
 
-from .api import add_category, get_category, get_subcategories
+from .api import add_category, get_category, get_lineage, get_subcategories
 
 
 urls = (
     '/', 'Children',
     '/category/(.*)', 'Category',
     '/children/(.*)', 'Children',
-    #'/lineage/(.*)',
+    '/lineage/(.*)', 'Lineage',
 )
 
-
-# note: I duplicated the POST hander for Children and Category, so that
-# Children can handle 'POST /' requests, to create new top-level categories,
-# and Category can handle 'POST /category/ID' to create new subcategories.
-# A better solution might be a redirect
 
 class Children(object):
     """
@@ -35,6 +30,12 @@ class Category(object):
 
     def GET(self, cat_id):
         return get_category(cat_id)
+
+
+class Lineage(object):
+
+    def GET(self, cat_id):
+        return get_lineage(cat_id)
 
 
 def main():

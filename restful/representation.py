@@ -35,3 +35,7 @@ def category_detail(category):
         lineage=lineage_uri(category),
     )
 
+
+def category_list(cats):
+    return [ category_info(cat) for cat in cats ]
+
