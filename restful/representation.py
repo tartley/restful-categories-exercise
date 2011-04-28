@@ -28,6 +28,7 @@ def category_info(category):
 
 def category_detail(category):
     return dict(
+        uri=category_uri(category),
         name=category.name,
         parent=category_uri(category.parent),
         children=children_uri(category),

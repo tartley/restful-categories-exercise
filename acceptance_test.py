@@ -22,7 +22,6 @@ class StartsWith(object):
         return other.startswith(self.value)
 
 
-
 class AT01_Test_Browse_The_Api(TestCase):
     '''
     Acceptance test 01
@@ -52,14 +51,22 @@ class AT01_Test_Browse_The_Api(TestCase):
         return check_output(command.split(), stderr=PIPE)
 
 
-    def post_new_category(self, uri, name):
-        response = self.make_request('POST', uri, params='name=%s' % (name,))
+    def post_new_category(self, parent_uri, name):
+        response = self.make_request(
+            'POST', parent_uri, params='name=%s' % (name,)
+        )
         loaded_response = json.loads(response)
         self.assertEqual(
             loaded_response,
-            {'name':name, 'uri':StartsWith(CATEGORY_URI)}
+            dict(
+                name=name,
+                uri=StartsWith(CATEGORY_URI),
+                parent=StartsWith(CATEGORY_URI),
+                children=StartsWith(CHILDREN_URI),
+                lineage=StartsWith(LINEAGE_URI),
+            )
         )
-        return loaded_response['uri']
+        return loaded_response
 
 
     def test_browse_the_api(self):
@@ -82,7 +89,13 @@ class AT01_Test_Browse_The_Api(TestCase):
         loaded_response = json.loads(response)
         self.assertEqual(
             loaded_response,
-            {'name':'Books', 'uri':StartsWith(CATEGORY_URI)}
+            dict(
+                name= 'Books',
+                uri= StartsWith(CATEGORY_URI),
+                parent= StartsWith(CATEGORY_URI),
+                children= StartsWith(CHILDREN_URI),
+                lineage= StartsWith(LINEAGE_URI),
+            )
         )
         books_uri = loaded_response['uri']
         books_uid = books_uri.split('/')[-1]
@@ -101,6 +114,7 @@ class AT01_Test_Browse_The_Api(TestCase):
         loaded = json.loads( response )
         expected = dict(
             name=loaded['name'],
+            uri=books_uri,
             parent=CATEGORY_URI,
             children=CHILDREN_URI + books_uid,
             lineage=LINEAGE_URI + books_uid,
@@ -109,10 +123,11 @@ class AT01_Test_Browse_The_Api(TestCase):
         books_children_uri = loaded['children']
 
         # post a new Fiction subcategory under Books
-        fiction_uri = self.post_new_category(books_children_uri, 'Fiction')
+        self.post_new_category(books_children_uri, 'Fiction')
 
         # post a new Non-Fiction subcategory under Books
-        nonfic_uri = self.post_new_category(books_children_uri, 'Non-Fiction')
+        response = self.post_new_category(books_children_uri, 'Non-Fiction')
+        nonfic_children_uri = response['children']
 
         # get the Books children uri to check the two new subcategories
         response = self.make_request('GET', books_children_uri)
@@ -124,10 +139,11 @@ class AT01_Test_Browse_The_Api(TestCase):
         self.assertEqual(loaded, expected)
 
         # post new category 'Geography' under 'Non-Fiction'
-        geog_uri = self.post_new_category(nonfic_uri, 'Geography')
+        response = self.post_new_category(nonfic_children_uri, 'Geography')
+        geog_children_uri = response['children']
 
         # post new category 'Maps' under 'Geography'
-        geog_uri = self.post_new_category(geog_uri, 'Geography')
+        response = self.post_new_category(geog_children_uri, 'Geography')
 
 
 

@@ -14,6 +14,11 @@ urls = (
 )
 
 
+# note: I duplicated the POST hander for Children and Category, so that
+# Children can handle 'POST /' requests, to create new top-level categories,
+# and Category can handle 'POST /category/ID' to create new subcategories.
+# A better solution might be a redirect
+
 class Children(object):
     """
     handler of requests for the children of a given category

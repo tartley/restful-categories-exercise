@@ -49,7 +49,7 @@ def add_category(name, parent_id=None):
     new_category = ModelCategory(name, parent)
     all_categories[ new_category.uid ] = new_category
     return json.dumps(
-        category_info(new_category)
+        category_detail(new_category)
     )
 
 
